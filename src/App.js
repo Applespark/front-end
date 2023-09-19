@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const apiUrl = 'http://pythonmasters.click:8080';
+
 
 function App() {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${apiUrl}/all/`)
+      .then(response => {
+        setMovies(response.data.result);
+      })
+      .catch(error => {
+        console.error('API 요청 중 오류 발생:', error);
+      });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>영화 목록</h1>
+      <ul>
+        {movies.map(movie => (
+          <li key={movie.id}>{movie.title}</li>
+        ))}
+      </ul>
     </div>
   );
 }
 
 export default App;
+
